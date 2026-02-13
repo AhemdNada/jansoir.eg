@@ -1,0 +1,425 @@
+.App {
+  text-align: left;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus styles - Luxury Gold */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #C9A24D; /* Gold */
+  outline-offset: 2px;
+}
+
+/* Admin layout polish (scoped to admin pages only) */
+.admin-layout {
+  background-color: #000000 !important;
+}
+
+.admin-layout *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.admin-layout *:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.25) !important; /* Gold focus ring */
+  transition: box-shadow 0.15s ease;
+}
+
+.admin-layout .admin-sidebar,
+.admin-layout .admin-sidebar-nav {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  background-color: #000000 !important;
+}
+
+.admin-layout .admin-sidebar::-webkit-scrollbar,
+.admin-layout .admin-sidebar-nav::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.admin-layout table {
+  border-collapse: collapse;
+}
+
+.admin-layout table thead th {
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.admin-layout table td {
+  font-size: 14px;
+}
+
+/* Admin Overlays - Fully Opaque */
+.admin-layout .fixed.inset-0[style*="background-color"] {
+  background-color: #000000 !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Admin Form Elements - Dark Theme Styling */
+.admin-layout input[type="text"],
+.admin-layout input[type="email"],
+.admin-layout input[type="password"],
+.admin-layout input[type="number"],
+.admin-layout textarea,
+.admin-layout select {
+  background-color: #111111 !important;
+  color: #E8DFC8 !important;
+  border-color: #7A5C3E !important;
+}
+
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+  color: #8F6F4F !important;
+  opacity: 0.9 !important;
+}
+
+.admin-layout input:focus,
+.admin-layout textarea:focus,
+.admin-layout select:focus {
+  border-color: #C9A24D !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(201, 162, 77, 0.2) !important;
+}
+
+/* Select Dropdown Options - Dark Theme */
+.admin-layout select option {
+  background-color: #111111 !important;
+  color: #E8DFC8 !important;
+  padding: 0.5rem !important;
+}
+
+.admin-layout select option:hover,
+.admin-layout select option:focus {
+  background-color: #1A1A1A !important;
+  color: #C9A24D !important;
+}
+
+.admin-layout select option:checked,
+.admin-layout select option:selected {
+  background-color: #1A1A1A !important;
+  color: #C9A24D !important;
+}
+
+/* Labels - High Contrast */
+.admin-layout label {
+  color: #E8DFC8 !important;
+}
+
+.admin-layout label span {
+  color: #E8DFC8 !important;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Swiper Navigation Buttons - Custom Button Component */
+.swiper-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 20;
+  cursor: pointer;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.homeSlider .swiper-nav-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.homeSlider .swiper-nav-prev {
+  left: 10px;
+}
+
+.homeSlider .swiper-nav-next {
+  right: 10px;
+}
+
+.homeSlider .swiper {
+  position: relative;
+}
+
+/* Hide default Swiper navigation buttons */
+.homeSlider .swiper-button-prev,
+.homeSlider .swiper-button-next,
+.productsSlider .swiper-button-prev,
+.productsSlider .swiper-button-next {
+  display: none !important;
+}
+
+.homeSlider .item {
+  width: 100%;
+}
+
+.homeSlider .item img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Category Slider */
+.homeCatSlider .swiper {
+  padding: 0;
+}
+
+.homeCatSlider .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+.homeCatSlider .item {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.homeCatSlider .item:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.homeCatSlider .item img {
+  transition: transform 0.3s ease;
+}
+
+.homeCatSlider .item:hover img {
+  transform: scale(1.1);
+}
+
+/* Navbar - Fully Opaque Background - NO TRANSPARENCY */
+header,
+header > div,
+header nav,
+header .header,
+header .navigation,
+header .top-strip,
+header input[type="text"],
+header .fixed.inset-0 {
+  background-color: #0B0B0B !important;
+  opacity: 1 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+/* Sort Dropdown - Luxury Dark Mode Styling */
+.sort-dropdown {
+  background-color: #0B0B0B !important;
+  color: #E8DFC8 !important;
+  border-color: #C9A24D !important;
+}
+
+.sort-dropdown option {
+  background-color: #0B0B0B !important;
+  color: #E8DFC8 !important;
+  padding: 0.5rem;
+}
+
+.sort-dropdown option:hover,
+.sort-dropdown option:focus,
+.sort-dropdown option:checked {
+  background-color: #111111 !important;
+  color: #C9A24D !important;
+}
+
+.sort-dropdown:focus {
+  border-color: #C9A24D !important;
+  outline: none !important;
+}
+
+/* Primary Color - Luxury Dark Mode (No Green) */
+.text-primary {
+  color: #C9A24D; /* Gold */
+}
+
+.bg-primary {
+  background-color: #C9A24D; /* Gold */
+}
+
+.hover\:bg-primary:hover {
+  background-color: #C9A24D !important; /* Gold on hover */
+}
+
+/* Popular Products Slider */
+.productsSlider .swiper {
+  padding: 0;
+}
+
+.productsSlider .swiper-slide {
+  width: auto;
+  height: auto;
+}
+
+.productsSlider .swiper-nav-btn {
+  width: 35px;
+  height: 35px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.productsSlider .swiper-nav-prev {
+  left: 0;
+}
+
+.productsSlider .swiper-nav-next {
+  right: 0;
+}
+
+.productsSlider .productItem {
+  width: 233px;
+}
+
+.productsSlider .link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.productsSlider .link:hover {
+  color: #C9A24D; /* Gold on hover */
+}
+
+/* Popular Products Tabs */
+.rightSec .flex {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  overflow-x: hidden;
+}
+
+.rightSec .flex::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+.rightSec .flex button {
+  position: relative;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.rightSec .flex button:focus,
+.rightSec .flex button:active,
+.rightSec .flex button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Category filter buttons in Popular Products section */
+.categoryFilterSwiper button,
+.categoryFilterSwiper button:focus,
+.categoryFilterSwiper button:active,
+.categoryFilterSwiper button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Hide scrollbar but allow scrolling on mobile if needed */
+@media (max-width: 1024px) {
+  .rightSec .flex {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .rightSec .flex::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Banner Infinite Scroll - Smooth continuous movement */
+.banner-infinite-scroll {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.banner-infinite-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.banner-scroll-wrapper {
+  display: flex;
+  align-items: flex-end;
+  gap: 5px;
+  animation: bannerScroll 30s linear infinite;
+  will-change: transform;
+  width: fit-content;
+}
+
+.banner-slide-item {
+  flex-shrink: 0;
+  min-width: 320px;
+  max-width: 380px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.bannerBox {
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.bannerBox img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+@keyframes bannerScroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+::selection {
+  @apply bg-gold text-dark-base;
+}
+
+
+* {
+  user-select: none;
+}

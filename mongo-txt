@@ -1,0 +1,3 @@
+"C:\Program Files\MongoDB\Server\8.2\bin\mongod.exe" --replSet rs0 --dbpath "C:\mongodb-data"
+rs0 [direct: primary] test> rs.initiate()
+rs0 [direct: primary] test> rs.status()

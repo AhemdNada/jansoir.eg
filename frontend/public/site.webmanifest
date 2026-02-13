@@ -1,0 +1,16 @@
+{
+  "name": "Jansoir.eg",
+  "short_name": "Jansoir",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "/images/icon-title.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
