@@ -33,26 +33,21 @@ const app = express();
 
 // Middleware
 app.disable('x-powered-by');
-
-// Behind proxies (Vercel/NGINX), enable correct protocol/IP handling.
 app.set('trust proxy', 1);
 
-// Security headers (API responses). Keep CSP off here since the API doesn't serve HTML.
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-    // Frontend and backend are often on different origins; allow loading static assets like /uploads.
     crossOriginResourcePolicy: { policy: 'cross-origin' }
 }));
 
-// Compression for JSON responses
 app.use(compression());
 
 const parseOrigins = () => {
     const raw = CORS_ORIGINS;
     if (!raw) {
         if (isProd) {
-            console.warn('⚠️  CORS_ORIGINS is not set in production. Requests from your frontend origin will be blocked until you set it.');
+            console.warn('⚠️ CORS_ORIGINS is not set in production.');
         }
         return [
             'http://localhost:5173',
@@ -69,18 +64,11 @@ const parseOrigins = () => {
 const allowedOrigins = parseOrigins();
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow non-browser clients (no Origin header)
         if (!origin) return callback(null, true);
-
         if (allowedOrigins.includes(origin)) return callback(null, origin);
-
-        // Dev convenience: allow localhost/127.0.0.1 on any port.
-        if (process.env.NODE_ENV !== 'production') {
-            if (/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
-                return callback(null, origin);
-            }
+        if (process.env.NODE_ENV !== 'production' && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) {
+            return callback(null, origin);
         }
-
         return callback(new Error(`CORS blocked for origin: ${origin}`));
     },
     credentials: true
@@ -89,8 +77,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// On-the-fly image optimization for /uploads (optional via query params).
-// Example: /uploads/products/foo.jpg?w=480&format=webp&q=75
+// Image optimization for /uploads
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 const UPLOADS_CACHE_DIR = path.join(UPLOADS_DIR, '.cache');
 const UPLOADS_DIR_RESOLVED = path.resolve(UPLOADS_DIR);
@@ -106,10 +93,7 @@ const clampInt = (value, min, max, fallback) => {
 app.get('/uploads/:folder/:filename', async (req, res, next) => {
     const { folder, filename } = req.params;
     const { w, format, q } = req.query || {};
-
-    // No optimization requested; fall back to static serving.
     if (w == null && format == null && q == null) return next();
-
     if (!SUPPORTED_INPUT_EXT.test(filename)) return next();
 
     const width = clampInt(w, 1, 2400, null);
@@ -149,17 +133,9 @@ app.get('/uploads/:folder/:filename', async (req, res, next) => {
         await fsp.mkdir(cacheDir, { recursive: true });
 
         let img = sharp(inputPath, { failOnError: false }).rotate();
-        if (width) {
-            img = img.resize({ width, withoutEnlargement: true });
-        }
+        if (width) img = img.resize({ width, withoutEnlargement: true });
 
-        // Convert and cache.
-        const buffer = await img.toFormat(outFormat, {
-            quality,
-            ...(outFormat === 'jpeg' ? { mozjpeg: true } : null),
-        }).toBuffer();
-
-        // Best-effort cache write (don't fail the request if it can't write).
+        const buffer = await img.toFormat(outFormat, { quality, ...(outFormat === 'jpeg' ? { mozjpeg: true } : null) }).toBuffer();
         fsp.writeFile(cachePath, buffer).catch(() => undefined);
 
         res.setHeader('Content-Type', `image/${outFormat === 'jpeg' ? 'jpeg' : outFormat}`);
@@ -172,13 +148,10 @@ app.get('/uploads/:folder/:filename', async (req, res, next) => {
     }
 });
 
-// Serve uploaded files statically
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
+app.use('/uploads', express.static(UPLOADS_DIR, {
     maxAge: '7d',
     immutable: false,
-    setHeaders: (res) => {
-        res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-    }
+    setHeaders: (res) => res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin')
 }));
 
 // Routes
@@ -198,34 +171,27 @@ app.use('/api/coupons', couponRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/admin/analytics', adminAnalyticsRoutes);
 
-// Health check route
-app.get('/api/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Shopera API is running' });
-});
+// Health check
+app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Shopera API is running' }));
 
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = getPort();
 
+// ✅ Connect to MongoDB Atlas
 connectDB()
     .then(async () => {
         await ensureShippingGovernorates();
-        // Attempt to create/sync indexes (logs issues; does not crash server).
-        // If you had old duplicate analytics records, run `npm run analytics:dedupe` first.
-        try {
-            await AnalyticsEvent.syncIndexes();
-        } catch (e) {
-            console.warn('Analytics indexes not fully synced:', e?.message || e);
-        }
+        try { await AnalyticsEvent.syncIndexes(); } catch (e) { console.warn('Analytics indexes not fully synced:', e?.message || e); }
         app.listen(PORT, () => {
             console.log(`✅ Server running on port ${PORT}`);
             const base = PUBLIC_API_URL ? String(PUBLIC_API_URL).replace(/\/+$/, '') : '';
             console.log(`📦 API available at ${base ? `${base}/api` : '/api'}`);
-            console.log(`🗄️  Data stored in MongoDB`);
+            console.log(`🗄️  Data stored in MongoDB Atlas`);
         });
     })
-    .catch((err) => {
+    .catch(err => {
         console.error('Failed to start server:', err);
         process.exit(1);
     });
