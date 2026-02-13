@@ -194,7 +194,7 @@ const Products = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark-base py-8 pt-[120px] sm:pt-8">
+    <div className="min-h-screen bg-dark-base py-8 pt-[140px] sm:pt-[160px] lg:pt-36">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">

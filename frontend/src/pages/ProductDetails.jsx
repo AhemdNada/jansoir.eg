@@ -18,6 +18,7 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
   const [addError, setAddError] = useState('');
+  const [showAddToCartToast, setShowAddToCartToast] = useState(false);
   const [loading, setLoading] = useState(true);
   const [productData, setProductData] = useState(null);
   const [loadError, setLoadError] = useState('');
@@ -259,6 +260,12 @@ const ProductDetails = () => {
     }
   }, [requiresColor, selectedColor, colorOptions]);
 
+  useEffect(() => {
+    if (!showAddToCartToast) return;
+    const t = setTimeout(() => setShowAddToCartToast(false), 2800);
+    return () => clearTimeout(t);
+  }, [showAddToCartToast]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-dark-base">
@@ -327,6 +334,7 @@ const ProductDetails = () => {
     for (let i = 0; i < clampedQty; i++) {
       addToCart(payload);
     }
+    setShowAddToCartToast(true);
   };
 
   const handleNextImage = () => {
@@ -343,6 +351,23 @@ const ProductDetails = () => {
 
   return (
     <div className="min-h-screen bg-dark-base pt-[140px] sm:pt-[160px] lg:pt-24 pb-14">
+      {/* Add to Cart Toast */}
+      <div
+        role="alert"
+        aria-live="polite"
+        className={`fixed top-24 right-6 left-auto z-[150] px-5 py-3 rounded-xl shadow-xl border border-gold/40 bg-dark-light text-gold font-semibold text-sm sm:text-base transition-all duration-300 ease-out ${
+          showAddToCartToast
+            ? 'opacity-100 translate-x-0 visible'
+            : 'opacity-0 translate-x-4 invisible pointer-events-none'
+        }`}
+      >
+        <span className="flex items-center gap-2">
+          <svg className="w-5 h-5 text-gold flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+          Added to cart successfully
+        </span>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav className="flex mb-8" aria-label="Breadcrumb">

@@ -335,25 +335,28 @@ const Cart = () => {
               <div className="space-y-4 sm:space-y-6">
                 {cart.items.map((item, index) => (
                   <div 
-                    key={item.id} 
+                    key={`${item.id}-${item.size || ''}-${item.color || ''}`}
                     className={`flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 pb-4 sm:pb-6 ${
                       index !== cart.items.length - 1 ? 'border-b border-woody' : ''
                     }`}
                   >
-                    {/* Product Image */}
-                    <div className="w-full sm:w-24 h-48 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-dark-base border border-woody">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    
-                    {/* Product Info */}
-                    <div className="flex-1 w-full sm:w-auto">
-                      <h3 className="text-base sm:text-lg font-semibold text-beige mb-1 sm:mb-2">
-                        {item.name}
-                      </h3>
+                    {/* Product Image + Info - clickable to details */}
+                    <Link
+                      to={`/product/${item.id}`}
+                      className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 min-w-0 group cursor-pointer"
+                    >
+                      <div className="w-full sm:w-24 h-48 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-dark-base border border-woody group-hover:border-gold transition-colors">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      <div className="flex-1 w-full sm:w-auto min-w-0">
+                        <h3 className="text-base sm:text-lg font-semibold text-beige mb-1 sm:mb-2 group-hover:text-gold transition-colors">
+                          {item.name}
+                        </h3>
                       <p className="text-sm sm:text-base text-gold mb-1 sm:mb-0">
                         {item.price.toFixed(2)} EGP per item
                       </p>
@@ -366,15 +369,15 @@ const Cart = () => {
                       {/* Mobile: Quantity and Price */}
                       <div className="sm:hidden flex items-center justify-between mt-3">
                         <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity - 1, item.size, item.color)}
+                          <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(item.id, item.quantity - 1, item.size, item.color); }}
                             className="w-8 h-8 rounded-lg border-2 border-gold bg-dark-light text-beige flex items-center justify-center hover:bg-gold hover:text-dark-base hover:border-gold transition-all duration-300 font-semibold focus:outline-none"
                           >
                             <FontAwesomeIcon icon={faMinus} className="text-xs" />
                           </button>
                           <span className="w-10 text-center font-bold text-lg text-gold">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, item.quantity + 1, item.size, item.color)}
+                          <button
+                            onClick={(e) => { e.preventDefault(); e.stopPropagation(); updateQuantity(item.id, item.quantity + 1, item.size, item.color); }}
                             className="w-8 h-8 rounded-lg border-2 border-gold bg-dark-light text-beige flex items-center justify-center hover:bg-gold hover:text-dark-base hover:border-gold transition-all duration-300 font-semibold focus:outline-none"
                           >
                             <FontAwesomeIcon icon={faPlus} className="text-xs" />
@@ -386,7 +389,8 @@ const Cart = () => {
                           </p>
                         </div>
                       </div>
-                    </div>
+                      </div>
+                    </Link>
                     
                     {/* Desktop: Quantity Controls */}
                     <div className="hidden sm:flex items-center gap-3">

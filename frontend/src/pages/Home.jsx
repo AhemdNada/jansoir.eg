@@ -303,7 +303,7 @@ const Home = () => {
               heroSwiperRef.current = swiper;
             }}
             autoplay={{
-              delay: 60000,
+              delay: 6000,
               disableOnInteraction: false,
             }}
             loop={false}
@@ -311,20 +311,19 @@ const Home = () => {
           >
             {heroImages.map((image, index) => (
               <SwiperSlide key={index}>
-                <div className="item rounded-[10px] overflow-hidden h-[180px] sm:h-[220px] md:h-[320px] xl:h-[420px] flex justify-center items-center bg-gray-100">
-                <img
-                  src={`${image.base}-1200w.webp`}
-                  srcSet={`${image.base}-480w.webp 480w, ${image.base}-768w.webp 768w, ${image.base}-1200w.webp 1200w`}
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
-                  width="1200"
-                  height="800"
-                  alt={image.alt}
-                  className="w-full h-full object-contain object-center"
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={index === 0 ? 'high' : 'auto'}
-                  decoding={index === 0 ? 'sync' : 'async'}
-                />
-
+                <div className="item rounded-[10px] overflow-hidden h-[180px] sm:h-[220px] md:h-[320px] xl:h-[420px] flex justify-center items-center bg-dark-base">
+                  <img
+                    src={`${image.base}-1200w.webp`}
+                    srcSet={`${image.base}-480w.webp 480w, ${image.base}-768w.webp 768w, ${image.base}-1200w.webp 1200w`}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1200px"
+                    width="1200"
+                    height="800"
+                    alt={image.alt}
+                    className="w-full h-full object-cover object-center"
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    fetchPriority={index === 0 ? 'high' : 'auto'}
+                    decoding={index === 0 ? 'sync' : 'async'}
+                  />
                 </div>
               </SwiperSlide>
             ))}

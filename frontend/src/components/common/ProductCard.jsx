@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import FavoriteHeart from './FavoriteHeart';
 
 const ProductCard = ({ product }) => {
+  const productUrl = product.link || `/product/${product.id}`;
   const discount = useMemo(() => {
     if (!product.originalPrice || product.originalPrice <= 0) return 0;
     return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
@@ -11,46 +12,49 @@ const ProductCard = ({ product }) => {
   const fallbackHoverImage = product.images && product.images.length > 1 ? product.images[1] : null;
 
   return (
-    <div className="productItem group shadow-lg rounded-md overflow-hidden border border-woody bg-dark-light transition-transform duration-200 hover:-translate-y-0.5 hover:border-gold">
+    <Link
+      to={productUrl}
+      className="productItem group block shadow-lg rounded-md overflow-hidden border border-woody bg-dark-light transition-transform duration-200 hover:-translate-y-0.5 hover:border-gold cursor-pointer"
+      aria-label={`View ${product.name}`}
+    >
       <div className="imgWrapper w-full overflow-hidden rounded-md rounded-bl-none rounded-br-none relative">
-        <Link to={product.link || `/product/${product.id}`} aria-label={product.name}>
-          <div className="img h-[200px] overflow-hidden relative">
+        <div className="img h-[200px] overflow-hidden relative">
+          <img
+            src={product.image}
+            alt=""
+            className="w-full h-full object-cover"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 768px) 100vw, 233px"
+          />
+          {(product.hoverImage || fallbackHoverImage) && (
             <img
-              src={product.image}
+              src={product.hoverImage || fallbackHoverImage}
               alt=""
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover transition-all duration-700 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-hover:scale-105"
               loading="lazy"
               decoding="async"
-              sizes="(max-width: 768px) 100vw, 233px"
             />
-            {(product.hoverImage || fallbackHoverImage) && (
-              <img
-                src={product.hoverImage || fallbackHoverImage}
-                alt=""
-                className="w-full h-full object-cover transition-all duration-700 absolute top-0 left-0 opacity-0 group-hover:opacity-100 group-hover:scale-105"
-                loading="lazy"
-                decoding="async"
-              />
-            )}
-          </div>
-        </Link>
+          )}
+        </div>
         {discount > 0 && (
           <span className="discount flex items-center absolute top-[10px] left-[10px] z-50 bg-woody text-beige rounded-lg px-2 py-1 text-[13px] font-[700] border-2 border-gold shadow-lg">
             {discount}% OFF
           </span>
         )}
-        <div className="actions absolute top-3 right-[5px] z-50 flex items-center gap-2 flex-col w-[50px] transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto">
+        <div
+          className="actions absolute top-3 right-[5px] z-50 flex items-center gap-2 flex-col w-[50px] transition-all duration-300 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto"
+          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+        >
           <FavoriteHeart product={product} />
         </div>
       </div>
       <div className="info p-3 py-5 bg-dark-base">
         <p className="text-[13px] font-[500] text-beige transition-colors duration-200 group-hover:text-gold">
-          <span className="link">{product.brand || 'Brand'}</span>
+          {product.brand || 'Brand'}
         </p>
-        <h3 className="text-[13px] lg:text-[14px] title mt-1 font-[600] mb-1 text-beige leading-tight transition-colors duration-200 group-hover:text-gold">
-          <Link to={product.link || `/product/${product.id}`} className="link" title={product.name}>
-            {product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}
-          </Link>
+        <h3 className="text-[13px] lg:text-[14px] title mt-1 font-[600] mb-1 text-beige leading-tight transition-colors duration-200 group-hover:text-gold" title={product.name}>
+          {product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}
         </h3>
         <div className="flex items-center gap-4 justify-between mb-3">
           {product.originalPrice && (
@@ -63,7 +67,7 @@ const ProductCard = ({ product }) => {
           </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
