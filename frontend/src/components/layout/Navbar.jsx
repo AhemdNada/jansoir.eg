@@ -28,6 +28,7 @@ const Navbar = () => {
   const { favorites } = useFavorites();
   const location = useLocation();
   const searchBoxRef = useRef(null);
+  const mobileSearchInputRef = useRef(null);
   const debounceRef = useRef(null);
   const abortRef = useRef(null);
   const lastQueryRef = useRef('');
@@ -117,6 +118,16 @@ const Navbar = () => {
       }
     };
   }, [searchQuery, MIN_QUERY_LENGTH, SEARCH_DEBOUNCE_MS, SEARCH_LIMIT]);
+
+  useEffect(() => {
+    if (isSearchOpen) {
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => mobileSearchInputRef.current?.focus(), 50);
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isSearchOpen]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -363,6 +374,18 @@ const Navbar = () => {
                 </div>
               )}
 
+              {/* Search - Mobile only (in top bar next to favorites/cart) */}
+              <button
+                onClick={() => {
+                  setIsSearchOpen(true);
+                  if (searchQuery.trim().length >= MIN_QUERY_LENGTH) setShowResults(true);
+                }}
+                className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-beige hover:text-gold transition-colors focus:outline-none"
+                aria-label="Search"
+              >
+                <FontAwesomeIcon icon={faMagnifyingGlass} className="w-5 h-5" />
+              </button>
+
               {/* Favorites */}
               <Link to="/favorites" className="relative" aria-label="Favorites">
                 <FontAwesomeIcon icon={faHeart} className="w-5 h-5 text-beige hover:text-gold transition-colors" />
@@ -452,13 +475,26 @@ const Navbar = () => {
         </nav>
       </header>
 
-      {/* Mobile Search Overlay */}
+      {/* Mobile Search Overlay - Full screen from top, covers everything */}
       {isSearchOpen && (
-        <div className="lg:hidden fixed inset-0 z-[110] bg-black/60 flex items-end">
-          <div className="w-full px-3 pb-[80px]">
-            <div ref={searchBoxRef} className="w-full h-[50px] border border-woody rounded-md relative flex items-center bg-dark-base">
+        <div
+          className="lg:hidden fixed inset-0 z-[150] flex flex-col"
+          style={{ backgroundColor: '#0B0B0B' }}
+        >
+          {/* Backdrop - taps to close */}
+          <div
+            className="absolute inset-0"
+            onClick={() => {
+              setIsSearchOpen(false);
+              setShowResults(false);
+            }}
+            aria-hidden="true"
+          />
+          <div ref={searchBoxRef} className="relative z-10 w-full px-4 pt-6 pb-4 flex-shrink-0">
+            <div className="w-full h-[50px] border border-woody rounded-md relative flex items-center bg-dark-base">
               <input
                 type="text"
+                ref={mobileSearchInputRef}
                 placeholder="Search for products..."
                 aria-label="Search for products"
                 className="w-full h-full px-3 text-[15px] focus:outline-none text-beige placeholder-woody"
@@ -473,6 +509,7 @@ const Navbar = () => {
                   if (event.key === 'Escape') {
                     setShowResults(false);
                     setIsSearchFocused(false);
+                    setIsSearchOpen(false);
                     event.currentTarget.blur();
                   }
                 }}
@@ -505,8 +542,8 @@ const Navbar = () => {
 
               {showResults && (
                 <div
-                  className="absolute left-0 right-0 top-full mt-2 border border-woody rounded-md shadow-lg max-h-80 overflow-y-auto z-[110] bg-[#0B0B0B] bg-opacity-100"
-                  style={{ backgroundColor: '#0B0B0B', opacity: 1 }}
+                  className="absolute left-0 right-0 top-full mt-2 border border-woody rounded-md shadow-lg max-h-80 overflow-y-auto z-[110] bg-[#0B0B0B]"
+                  style={{ backgroundColor: '#0B0B0B' }}
                 >
                   {isSearching && (
                     <div className="px-4 py-3 text-sm text-woody-light">Searching...</div>
@@ -553,6 +590,8 @@ const Navbar = () => {
               )}
             </div>
           </div>
+          {/* Spacer so overlay fills screen */}
+          <div className="flex-1 min-h-0" />
         </div>
       )}
 
@@ -562,33 +601,6 @@ const Navbar = () => {
         style={{ backgroundColor: '#0B0B0B', opacity: 1, boxShadow: '0 -4px 20px rgba(0,0,0,1)' }}
       >
         <div className="flex items-center justify-around h-[60px] px-2">
-          {/* Search Button */}
-          <button
-            onClick={() => {
-              const nextOpen = !isSearchOpen;
-              setIsSearchOpen(nextOpen);
-              if (!nextOpen) {
-                setShowResults(false);
-              } else if (searchQuery.trim().length >= MIN_QUERY_LENGTH) {
-                setShowResults(true);
-              }
-            }}
-            className="flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors active:bg-dark-light rounded-lg focus:outline-none"
-          >
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              className={`text-[20px] transition-colors ${isSearchOpen ? 'text-gold' : 'text-beige'
-                }`}
-            />
-            <span className={`text-[11px] font-medium transition-colors ${isSearchOpen ? 'text-gold' : 'text-beige'
-              }`}>
-              Search
-            </span>
-          </button>
-
-          {/* Divider */}
-          <div className="w-[1px] h-8 bg-woody"></div>
-
           {/* Customize Button */}
           <Link
             to="/customize"

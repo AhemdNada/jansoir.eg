@@ -351,6 +351,17 @@ header .fixed.inset-0 {
   box-shadow: none !important;
 }
 
+/* Hide scrollbar on category filter swiper (all screen sizes) */
+.categoryFilterSwiper,
+.categoryFilterSwiper .swiper-wrapper {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.categoryFilterSwiper::-webkit-scrollbar,
+.categoryFilterSwiper .swiper-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
 /* Hide scrollbar but allow scrolling on mobile if needed */
 @media (max-width: 1024px) {
   .rightSec .flex {

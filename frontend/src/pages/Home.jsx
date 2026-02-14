@@ -398,41 +398,66 @@ const Home = () => {
               </p>
             </div>
             <div className="rightSec w-full lg:w-[60%]">
-              {/* Category filter - Mobile swiper */}
-              <div className="lg:hidden">
-                <Swiper
-                  modules={[FreeMode]}
-                  spaceBetween={16}
-                  slidesPerView="auto"
-                  freeMode={{
-                    enabled: true,
-                    sticky: false,
-                    momentumRatio: 0.5,
-                    momentumVelocityRatio: 0.5,
-                  }}
-                  touchEventsTarget="container"
-                  touchRatio={1}
-                  resistance={true}
-                  resistanceRatio={0.85}
-                  className="categoryFilterSwiper"
-                >
-                  <SwiperSlide style={{ width: 'auto' }}>
+              {/* Category filter - Swiper on all screen sizes (swipe/scroll, no visible scrollbar) */}
+              <Swiper
+                modules={[FreeMode]}
+                spaceBetween={16}
+                slidesPerView="auto"
+                freeMode={{
+                  enabled: true,
+                  sticky: false,
+                  momentumRatio: 0.5,
+                  momentumVelocityRatio: 0.5,
+                }}
+                touchEventsTarget="container"
+                touchRatio={1}
+                resistance={true}
+                resistanceRatio={0.85}
+                grabCursor={true}
+                className="categoryFilterSwiper"
+              >
+                <SwiperSlide style={{ width: 'auto' }}>
+                  <button
+                    onClick={() => setSelectedCategory('all')}
+                    className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === 'all'
+                      ? 'text-gold'
+                      : 'text-beige hover:text-gold'
+                      }`}
+                  >
+                    <span className="relative inline-block">
+                      All
+                    </span>
+                    <span
+                      className={`
+                        absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-gold to-gold-light
+                        transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
+                        shadow-[0_2px_4px_rgba(201,162,77,0.3)]
+                        ${selectedCategory === 'all'
+                          ? 'w-full opacity-100'
+                          : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
+                        }
+                      `}
+                    />
+                  </button>
+                </SwiperSlide>
+                {getActiveCategories().map((category) => (
+                  <SwiperSlide key={category._id} style={{ width: 'auto' }}>
                     <button
-                      onClick={() => setSelectedCategory('all')}
-                      className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === 'all'
+                      onClick={() => setSelectedCategory(category.slug)}
+                      className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === category.slug
                         ? 'text-gold'
                         : 'text-beige hover:text-gold'
                         }`}
                     >
                       <span className="relative inline-block">
-                        All
+                        {category.name}
                       </span>
                       <span
                         className={`
                           absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-gold to-gold-light
                           transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
                           shadow-[0_2px_4px_rgba(201,162,77,0.3)]
-                          ${selectedCategory === 'all'
+                          ${selectedCategory === category.slug
                             ? 'w-full opacity-100'
                             : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
                           }
@@ -440,84 +465,8 @@ const Home = () => {
                       />
                     </button>
                   </SwiperSlide>
-                  {getActiveCategories().map((category) => (
-                    <SwiperSlide key={category._id} style={{ width: 'auto' }}>
-                      <button
-                        onClick={() => setSelectedCategory(category.slug)}
-                        className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === category.slug
-                          ? 'text-gold'
-                          : 'text-beige hover:text-gold'
-                          }`}
-                      >
-                        <span className="relative inline-block">
-                          {category.name}
-                        </span>
-                        <span
-                          className={`
-                            absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-gold to-gold-light
-                            transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-                            shadow-[0_2px_4px_rgba(201,162,77,0.3)]
-                            ${selectedCategory === category.slug
-                              ? 'w-full opacity-100'
-                              : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
-                            }
-                          `}
-                        />
-                      </button>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-              </div>
-              {/* Category filter - Desktop flex layout */}
-              <div className="hidden lg:flex items-center justify-end gap-4 lg:gap-6">
-                <button
-                  onClick={() => setSelectedCategory('all')}
-                  className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === 'all'
-                    ? 'text-gold'
-                    : 'text-beige hover:text-gold'
-                    }`}
-                >
-                  <span className="relative inline-block">
-                    All
-                  </span>
-                  <span
-                    className={`
-                      absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-gold to-gold-light
-                      transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-                      shadow-[0_2px_4px_rgba(201,162,77,0.3)]
-                      ${selectedCategory === 'all'
-                        ? 'w-full opacity-100'
-                        : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
-                      }
-                    `}
-                  />
-                </button>
-                {getActiveCategories().map((category) => (
-                  <button
-                    key={category._id}
-                    onClick={() => setSelectedCategory(category.slug)}
-                    className={`px-0 py-2 text-[14px] font-[500] whitespace-nowrap transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] relative outline-none focus:outline-none focus-visible:outline-none active:outline-none overflow-hidden group ${selectedCategory === category.slug
-                      ? 'text-gold'
-                      : 'text-beige hover:text-gold'
-                      }`}
-                  >
-                    <span className="relative inline-block">
-                      {category.name}
-                    </span>
-                    <span
-                      className={`
-                        absolute bottom-0 left-0 h-[2.5px] bg-gradient-to-r from-gold to-gold-light
-                        transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]
-                        shadow-[0_2px_4px_rgba(201,162,77,0.3)]
-                        ${selectedCategory === category.slug
-                          ? 'w-full opacity-100'
-                          : 'w-0 opacity-0 group-hover:w-full group-hover:opacity-100'
-                        }
-                      `}
-                    />
-                  </button>
                 ))}
-              </div>
+              </Swiper>
             </div>
           </div>
           <div className="min-h-0">
