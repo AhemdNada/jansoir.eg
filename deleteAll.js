@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/shopera';
+const MONGODB_URI = 'mongodb+srv://jansoir:gin7cx3SVaXcqJGW@cluster0.axd2onf.mongodb.net/jansoir?retryWrites=true&w=majority';
 
 mongoose.connect(MONGODB_URI)
   .then(async () => {

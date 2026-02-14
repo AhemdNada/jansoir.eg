@@ -175,7 +175,7 @@ const Navbar = () => {
     const activeCategories = getActiveCategories();
     const baseCats = [
       { id: 'home', label: 'Home', path: '/' },
-      { id: 'all', label: 'All Products' }
+      { id: 'all', label: 'All Categories' }
     ];
 
     // Add categories from database
